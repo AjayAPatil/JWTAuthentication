@@ -1,0 +1,9 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs
+/JWTAuthDemo/bin/Debug/netcoreapp3.1
+/JWTAuthDemo/ClientApp/e2e
+/JWTAuthDemo/ClientApp/package-lock.json
+/JWTAuthDemo/obj
