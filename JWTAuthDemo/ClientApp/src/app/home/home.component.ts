@@ -10,6 +10,7 @@ export class HomeComponent implements OnInit {
 
     authData = "";
     anonymousData = "";
+    adminData = "";
     constructor(
         private global: GlobalService,
         private httpClient: HttpClient,
@@ -35,6 +36,17 @@ export class HomeComponent implements OnInit {
         this.httpClient.get<any>("/api/test/anonymous").subscribe(res => {
             if (res) {
                 this.anonymousData = res.message;
+            }
+        })
+    }
+    getAdminData(){        
+        var httpOptions = {
+            headers: new HttpHeaders({ 'Authorization': 'Bearer ' + this.global.token })
+        };
+        //JWT
+        this.httpClient.get<any>("/api/test/admin",httpOptions).subscribe(res => {
+            if (res) {
+                this.adminData = res.message;
             }
         })
     }

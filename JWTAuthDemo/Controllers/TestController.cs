@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using JWTAuthDemo.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -19,6 +20,17 @@ namespace JWTAuthDemo.Controllers
             var response = new
             {
                 message = "this is authorized call"
+            };
+            return Ok(response);
+        }
+
+        [HttpGet("admin")]
+        [Authorize(Roles =Roles.Admin)]//here jwt token 
+        public ActionResult GetByrole()
+        {
+            var response = new
+            {
+                message = "this is authorized call for admin"
             };
             return Ok(response);
         }

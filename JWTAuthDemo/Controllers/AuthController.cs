@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 
 namespace JWTAuthDemo.Controllers
 {
@@ -26,12 +27,14 @@ namespace JWTAuthDemo.Controllers
         [HttpPost("login")]
         public ActionResult Login(UserModel user)
         {
-            var data = new
+            List<UserModel> users = _config.GetSection("Users").Get<List<UserModel>>();
+            var curruser = users.Find(a => a.UserName == user.UserName && a.Password == user.Password);
+            if(curruser == null)
             {
-                user,
-                token = GenerateJSONWebToken(user)
-            };
-            return Ok(data);
+                return Unauthorized();
+            }
+            curruser.Token = GenerateJSONWebToken(curruser);
+            return Ok(curruser);
         }
 
         private string GenerateJSONWebToken(UserModel userInfo)
@@ -41,7 +44,8 @@ namespace JWTAuthDemo.Controllers
 
             var claims = new[] {
                 new Claim(JwtRegisteredClaimNames.Sub, userInfo.UserName),
-                new Claim("Username",userInfo.UserName),
+                new Claim("Username", userInfo.UserName),
+                new Claim(ClaimTypes.Role, userInfo.Role),
                 //new Claim(JwtRegisteredClaimNames.Email, userInfo.EmailAddress),
                 //new Claim("DateOfJoing", userInfo.DateOfJoing.ToString("yyyy-MM-dd")),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
